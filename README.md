@@ -15,6 +15,10 @@
 
 [Install Minikube](https://kubernetes.io/docs/setup/minikube/)
 
+[Minikube Drivers](https://github.com/kubernetes/minikube/blob/master/docs/drivers.md)
+
+[Kubernetes tutoriais](https://kubernetes.io/docs/tutorials/)
+
 ### Linux
 
 - Disable security boot on bios
@@ -33,8 +37,16 @@
 
 #### Inicializar minikube cluster
 
+Default Virtual Box
+
 ```shell
 minikube start
+```
+
+Linux [Kvm](https://www.linux-kvm.org/page/Main_Page) driver
+
+```shell
+minikube start --vm-driver kvm2
 ```
 
 #### Criação
