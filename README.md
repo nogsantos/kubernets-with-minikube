@@ -247,3 +247,9 @@ Optionally, stop Minikube:
 ```shell
 $ minikube stop
 ```
+
+## Materiais
+
+[Kubernete github](https://github.com/kubernetes)
+
+[Exemplos kubernete](https://github.com/kubernetes/examples)
