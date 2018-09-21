@@ -1,0 +1,15 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: aplicacao-deployment
+spec:
+  template:
+    metadata:
+      labels:
+        name: aplicacao-pod
+    spec:
+      containers:
+        - name: container-aplicacao
+          image: tomcat:9.0-alpine
+          ports:
+            - containerPort: 80
