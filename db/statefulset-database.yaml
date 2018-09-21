@@ -1,0 +1,31 @@
+apiVersion: apps/v1beta1
+kind: StatefulSet
+metadata:
+  name: statefulset-postgres
+spec:
+  serviceName: nogsantos
+  template:
+    metadata:
+      labels:
+        name: postgres
+    spec:
+      containers:
+        - name: postgres-container
+          image: nogsantos/postgres
+          ports:
+            - containerPort: 5432
+          env:
+            - name: DB_NAME
+              value: "nogsantos"
+            - name: DB_USER
+              value: "postgres"
+            - name: DB_PASS
+              value: "123456"
+          volumeMounts:
+            - name: volume-postgres
+              mountPath: /var/lib/postgresql
+      volumes:
+        - name: volume-postgres
+          persistentVolumeClaim:
+            claimName: postgres-config
+
