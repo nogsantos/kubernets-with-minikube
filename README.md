@@ -30,14 +30,6 @@ O Minikube inicia um cluster de kubernetes de nó único localmente para fins de
 
 ## Setup
 
-[Docs Minikube](https://kubernetes.io/docs/tasks/tools/install-minikube/)
-
-[Install Minikube](https://kubernetes.io/docs/setup/minikube/)
-
-[Minikube Drivers](https://github.com/kubernetes/minikube/blob/master/docs/drivers.md)
-
-[Kubernetes tutoriais](https://kubernetes.io/docs/tutorials/)
-
 ### Linux
 
 - Disable security boot on bios
@@ -50,7 +42,7 @@ O Minikube inicia um cluster de kubernetes de nó único localmente para fins de
 - `chmod +x ./kubectl`
 - `sudo mv ./kubectl /usr/local/bin/kubectl`
 
-## Commands
+## Comandos
 
 ### Minikube
 
@@ -198,6 +190,54 @@ Setting up kubeconfig...
 Kubectl is now configured to use the cluster.
 ```
 
+### Requested operation is not valid: network 'minikube-net' is not active
+
+Caso a inicialização automática das redes virtuais não esteja definida por padrão, no fedora, quando ocorrer o problema, para inicializar a rede:
+
+[See Virsh](https://libvirt.org/virshcmdref.html)
+
+#### Acessar o `virsh` como root
+
+```shell
+$ sudo virsh
+Welcome to virsh, the virtualization interactive terminal.
+
+Type:  'help' for help with commands
+       'quit' to quit
+```
+
+#### Opcional, visualizar as redes disponíveis
+
+```shell
+# net-list --all
+ Name                 State      Autostart     Persistent
+----------------------------------------------------------
+
+```
+
+#### Iniciar a rede
+
+```shell
+# net-start minikube-net
+Network minikube-net started
+```
+
+#### Opcional, confirmar a inicialização
+
+```shell
+# net-list --all
+ Name                 State      Autostart     Persistent
+----------------------------------------------------------
+ default              active     yes           yes
+ minikube-net         active     no            yes
+```
+
+#### Opcional, sair do console do `virsh`
+
+```shell
+# exit
+```
+
 ## Default tasks
 
 ### Updating the application
@@ -248,8 +288,12 @@ Optionally, stop Minikube:
 $ minikube stop
 ```
 
-## Materiais
+## Links e material de apoio
 
-[Kubernete github](https://github.com/kubernetes)
-
-[Exemplos kubernete](https://github.com/kubernetes/examples)
+- [Kubernete github](https://github.com/kubernetes)
+- [Exemplos kubernete](https://github.com/kubernetes/examples)
+- [Docs Minikube](https://kubernetes.io/docs/tasks/tools/install-minikube/)
+- [Install Minikube](https://kubernetes.io/docs/setup/minikube/)
+- [Minikube Drivers](https://github.com/kubernetes/minikube/blob/master/docs/drivers.md)
+- [Kubernetes tutoriais](https://kubernetes.io/docs/tutorials/)
+- [kubectl CheatSheet](https://kubernetes.io/docs/reference/kubectl/cheatsheet/)
