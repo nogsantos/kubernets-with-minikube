@@ -155,6 +155,20 @@ minikube   Ready     24m       v1.6.0
 $ kubectl logs <POD-NAME>
 ```
 
+#### Detalhes do cluster
+
+```shell
+$ kubectl cluster-info
+Kubernetes master is running at https://192.168.39.83:8443
+KubeDNS is running at https://192.168.39.83:8443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
+```
+
+#### Visualizar deployments e serviços
+
+```shell
+$ kubectl get deployments,services
+```
+
 ## Fixes
 
 Ao tentar inicializar o `minikube` pode ocorrer o seguinte erro
