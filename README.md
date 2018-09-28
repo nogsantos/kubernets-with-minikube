@@ -10,12 +10,12 @@ O Minikube inicia um cluster de kubernetes de nó único localmente para fins de
 ### Terminologia e objetos Kubernetes
 
 - Objetos:
-  - Pod
+  - [](#pods)Pod
     - Os pods são os menores objetos que podem ser criados e gerenciados pelo Kubernetes, tais objetos são utilizados para abstrair os containers que formam uma aplicação.
-  - Deployment
-    - Os pods são os objetos mais básicos existentes no Kubernetes e dessa forma, eles não oferecem alguns recursos, entre eles o de informar o estado desejado da nossa aplicação para o Kubernetes gerenciar. Dessa forma, quando trabalhamos com o Kubernetes, realizamos a abstração desses objetos Pods em objetos que oferecem mais recursos, como por exemplo o objeto Deployment que é capaz de adicionar o estado desejado da aplicação para o Kubernetes gerenciar
-  - Service
+  - [](#services)Service
     - Coleção de pods que funcionam juntos e expostos como um ponto final. Um serviço (coleção de pods) é definido por um label selector. O Kubernetes fornece descoberta de serviço e roteamento de solicitação, atribuindo um endereço IP estável e um nome DNS ao serviço, além de balancear o tráfego de maneira circular para as conexões de rede desse endereço IP entre os conjuntos correspondentes ao seletor.
+  - [](#deployment)Deployment
+    - Um dos objetos mais comuns do Kubernetes é o Deployment. Define a especificação do contêiner necessária, juntamente com o nome e os labels usados ​​por outras partes do Kubernetes para descobrir e se conectar ao aplicativo. Os pods são os objetos mais básicos existentes no Kubernetes e dessa forma, eles não oferecem alguns recursos, entre eles o de informar o estado desejado da nossa aplicação para o Kubernetes gerenciar. Dessa forma, quando trabalhamos com o Kubernetes, realizamos a abstração desses objetos Pods em objetos que oferecem mais recursos, como por exemplo o objeto Deployment que é capaz de adicionar o estado desejado da aplicação para o Kubernetes gerenciar
 - Teminologia:
   - Nodes
     - Hosts que executam aplicativos do Kubernetes
@@ -105,7 +105,69 @@ Opening kubernetes dashboard in default browser...
 $ kubectl create -f [nome-arquivo.yaml]
 ```
 
-#### Verificar pods
+#### Run - Criar um [pod](#pods) baseado em uma imagem do docker
+
+O comando run cria um deployment com base nos parâmetros especificados, como a imagem ou as réplicas. Esse deployment é emitida para o Kubernetes master, que inicia os pods e contêineres necessários. O Kubectl run é semelhante ao docker run, mas em um nível de cluster.
+
+```shell
+$ kubectl run [pod name] --image=[docker image] --replicas=[number]
+
+Ex.:
+
+$ kubectl run redis --image=nogsantos/redis:latest --replicas=1
+deployment.apps/redis created
+```
+
+##### Run e expor a porta do container
+
+```shell
+$ kubectl run [pod name] --image=[docker image] --replicas=[number] --port=[number pod port] --hostport=[number exposed port]
+```
+
+#### Describe
+
+Para visualizar o que foi criado pelo kubernetes ao criar um [pod](#pods) com `run`, o comando `describe` apresenta maiores detalhes do que foi realizado
+
+```shell
+$ kubectl describe deployments [pod name]
+
+Ex.:
+
+$ kubectl describe deployments katacoda
+Name:                   katacoda
+Namespace:              default
+CreationTimestamp:      Fri, 28 Sep 2018 09:51:15 -0300
+Labels:                 run=katacoda
+Annotations:            deployment.kubernetes.io/revision=1
+Selector:               run=katacoda
+Replicas:               1 desired | 1 updated | 1 total | 1 available | 0 unavailable
+StrategyType:           RollingUpdate
+MinReadySeconds:        0
+RollingUpdateStrategy:  25% max unavailable, 25% max surge
+Pod Template:
+  Labels:  run=katacoda
+  Containers:
+   katacoda:
+    Image:        katacoda/docker-http-server:latest
+    Port:         <none>
+    Host Port:    <none>
+    Environment:  <none>
+    Mounts:       <none>
+  Volumes:        <none>
+Conditions:
+  Type           Status  Reason
+  ----           ------  ------
+  Available      True    MinimumReplicasAvailable
+  Progressing    True    NewReplicaSetAvailable
+OldReplicaSets:  <none>
+NewReplicaSet:   katacoda-6dc99c7f7d (1/1 replicas created)
+Events:
+  Type    Reason             Age   From                   Message
+  ----    ------             ----  ----                   -------
+  Normal  ScalingReplicaSet  23m   deployment-controller  Scaled up replica set katacoda-6dc99c7f7d to 1
+```
+
+#### Verificar [pods](#pods)
 
 ```shell
 $ kubectl get pods
@@ -113,7 +175,31 @@ NAME                          READY     STATUS    RESTARTS   AGE
 hello-node-1644695913-l4gkl   1/1       Running   0          49m
 ```
 
-#### Verificar all pods
+#### Verificar [serviços](#services)
+
+```shell
+$ kubectl get svc
+NAME          TYPE           CLUSTER-IP       EXTERNAL-IP   PORT(S)        AGE
+hello         ClusterIP      10.97.164.35     <none>        8080/TCP       2d
+katacoda      ClusterIP      10.96.72.106     172.17.0.30   8001/TCP       11m
+kubernetes    ClusterIP      10.96.0.1        <none>        443/TCP        8d
+nogsantos     ClusterIP      10.98.156.146    <none>        5432/TCP       2d
+service-app   LoadBalancer   10.106.110.134   <pending>     80:31244/TCP   8d
+```
+
+#### Expose [serviços](#services)
+
+Expor a porta do container
+
+```shell
+$ kubectl expose deployment [pod name] --external-ip="[endereco externo]" --port=[porta externa] --target-port=[porta no pod]
+
+Ex.:
+$ kubectl expose deployment katacoda --external-ip="172.17.0.30" --port=8001 --target-port=80
+service/katacoda exposed
+```
+
+#### Verificar todos [pods](#pods) ativos
 
 ```shell
 $ kubectl get pods --all-namespaces
@@ -123,19 +209,19 @@ kube-system   kube-dns-v20-kqlbc            3/3       Running   0          9h
 kube-system   kubernetes-dashboard-52wwl    1/1       Running   0          9h
 ```
 
-#### Deletar um pod
+#### Deletar um [pod](#pods)
 
 ```shell
 $ kubectl delete pods [pod-name]
 ```
 
-#### Informações sobre os pods
+#### Informações sobre os [pods](#pods)
 
 ```shell
 $ kubectl describe pods
 ```
 
-#### Filtrando apenas o Ip dos pods
+#### Filtrando apenas o Ip dos [pods](#pods)
 
 ```shell
 $ kubectl describe pods | grep IP
@@ -149,7 +235,7 @@ NAME       STATUS    AGE       VERSION
 minikube   Ready     24m       v1.6.0
 ```
 
-#### Consultar o log de um pod
+#### Consultar o log de um [pod](#pods)
 
 ```shell
 $ kubectl logs <POD-NAME>
@@ -163,7 +249,9 @@ Kubernetes master is running at https://192.168.39.83:8443
 KubeDNS is running at https://192.168.39.83:8443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
 ```
 
-#### Visualizar deployments e serviços
+#### Get
+
+Visualizar o status dos [deployments](#deployment) e dos [serviços](#services)
 
 ```shell
 $ kubectl get deployments,services

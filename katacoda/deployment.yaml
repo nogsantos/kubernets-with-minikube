@@ -1,0 +1,16 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: katacoda
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: katacoda
+    spec:
+      containers:
+      - name: katacoda
+        image: katacoda/docker-http-server:latest
+        ports:
+        - containerPort: 80
