@@ -10,11 +10,11 @@ O Minikube inicia um cluster de kubernetes de nó único localmente para fins de
 ### Terminologia e objetos Kubernetes
 
 - Objetos:
-  - [](#pods)Pod
+  - <a id="pods"></a>Pod
     - Os pods são os menores objetos que podem ser criados e gerenciados pelo Kubernetes, tais objetos são utilizados para abstrair os containers que formam uma aplicação.
-  - [](#services)Service
+  - <a id="services"></a>Service
     - Coleção de pods que funcionam juntos e expostos como um ponto final. Um serviço (coleção de pods) é definido por um label selector. O Kubernetes fornece descoberta de serviço e roteamento de solicitação, atribuindo um endereço IP estável e um nome DNS ao serviço, além de balancear o tráfego de maneira circular para as conexões de rede desse endereço IP entre os conjuntos correspondentes ao seletor.
-  - [](#deployment)Deployment
+  - <a id="deployment"></a>Deployment
     - Um dos objetos mais comuns do Kubernetes é o Deployment. Define a especificação do contêiner necessária, juntamente com o nome e os labels usados ​​por outras partes do Kubernetes para descobrir e se conectar ao aplicativo. Os pods são os objetos mais básicos existentes no Kubernetes e dessa forma, eles não oferecem alguns recursos, entre eles o de informar o estado desejado da nossa aplicação para o Kubernetes gerenciar. Dessa forma, quando trabalhamos com o Kubernetes, realizamos a abstração desses objetos Pods em objetos que oferecem mais recursos, como por exemplo o objeto Deployment que é capaz de adicionar o estado desejado da aplicação para o Kubernetes gerenciar
 - Teminologia:
   - Nodes
